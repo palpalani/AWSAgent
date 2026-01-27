@@ -26,11 +26,13 @@ AI-powered AWS infrastructure management through natural language conversations.
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Architecture](#architecture)
+- [GitHub Actions](#github-actions)
 - [Environment Variables](#environment-variables)
 - [Available Commands](#available-commands)
 - [API Reference](#api-reference)
 - [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
 - [License](#license)
 
 ---
@@ -277,6 +279,58 @@ class OperationResult(BaseModel):
     resource_type: str        # e.g., "AWS::S3::Bucket"
     # ... additional fields for resources, errors, etc.
 ```
+
+---
+
+## GitHub Actions
+
+This project uses comprehensive GitHub Actions for CI/CD, automation, and maintenance.
+
+### CI/CD Workflows
+
+| Workflow | File | Trigger | Description |
+|----------|------|---------|-------------|
+| **CI** | `ci.yml` | Push/PR to main | Runs linting (ruff), type checking (mypy), and tests (pytest) on Python 3.11, 3.12, 3.13 |
+| **Security** | `security.yml` | Push/PR, weekly | CodeQL analysis for Python vulnerabilities and dependency review |
+| **Release** | `release.yml` | Version tags (`v*`) | Builds package, creates GitHub release with artifacts |
+| **Changelog** | `changelog.yml` | Release published | Auto-generates `CHANGELOG.md` from conventional commits |
+
+### Automation Workflows
+
+| Workflow | File | Trigger | Description |
+|----------|------|---------|-------------|
+| **Labeler** | `labeler.yml` | PR opened/synced | Auto-labels PRs based on files changed and PR size (xs/s/m/l/xl) |
+| **Release Drafter** | `release-drafter.yml` | Push to main | Drafts release notes automatically from merged PRs |
+| **Auto-Merge** | `auto-merge.yml` | Dependabot PRs | Auto-approves and merges patch updates; approves minor updates |
+| **Welcome** | `welcome.yml` | First issue/PR | Welcomes first-time contributors with helpful guidance |
+
+### Maintenance Workflows
+
+| Workflow | File | Trigger | Description |
+|----------|------|---------|-------------|
+| **Stale** | `stale.yml` | Daily at 1:30 AM | Marks issues stale after 60 days, PRs after 45 days; closes after 14 more days |
+| **Remove Stale** | `remove-stale.yml` | Comments, reviews | Instantly removes stale label when there's new activity |
+| **Lock** | `lock.yml` | Weekly (Sunday) | Locks closed issues/PRs after 90 days to prevent necroposting |
+
+### Configuration Files
+
+| File | Purpose |
+|------|---------|
+| `.github/dependabot.yml` | Automated dependency updates (weekly for pip and GitHub Actions) |
+| `.github/labeler.yml` | File patterns to label mappings for auto-labeling |
+| `.github/release-drafter.yml` | Release note categories, version resolver, and autolabeler rules |
+
+### Branch Protection (Recommended)
+
+For production use, enable branch protection on `main`:
+
+1. Go to **Settings** → **Branches** → **Add rule**
+2. Branch name pattern: `main`
+3. Enable:
+   - Require a pull request before merging
+   - Require status checks to pass (select: `lint`, `typecheck`, `test`)
+   - Require branches to be up to date
+   - Include administrators
 
 ---
 
@@ -683,6 +737,84 @@ AI: You have 5 S3 buckets in us-east-1:
 3. **Use least privilege** permissions
 4. **Enable CloudTrail** for audit logging
 5. **Store secrets in AWS Secrets Manager** or similar
+
+---
+
+## Contributing
+
+We welcome contributions! Here's how to get started:
+
+### Development Setup
+
+1. Fork the repository
+2. Clone your fork:
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/AWSAgent.git
+   cd AWSAgent
+   ```
+3. Install dependencies:
+   ```bash
+   uv sync --all-extras
+   ```
+4. Create a branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+### Code Standards
+
+Before submitting a PR, ensure:
+
+```bash
+# Format code
+uv run ruff format src tests main.py chat.py
+
+# Run linter
+uv run ruff check src tests main.py chat.py
+
+# Run type checker
+uv run mypy src
+
+# Run tests
+uv run pytest
+```
+
+### Commit Convention
+
+We use [Conventional Commits](https://www.conventionalcommits.org/) for automatic changelog generation:
+
+| Prefix | Description | Example |
+|--------|-------------|---------|
+| `feat:` | New feature | `feat: add S3 bucket versioning support` |
+| `fix:` | Bug fix | `fix: handle empty response from CloudWatch` |
+| `docs:` | Documentation | `docs: update API reference` |
+| `chore:` | Maintenance | `chore: update dependencies` |
+| `ci:` | CI/CD changes | `ci: add Python 3.13 to test matrix` |
+| `refactor:` | Code refactoring | `refactor: extract validation logic` |
+| `test:` | Test changes | `test: add integration tests for delete operation` |
+
+### Pull Request Process
+
+1. Update documentation if needed
+2. Add tests for new functionality
+3. Ensure all CI checks pass
+4. PRs are auto-labeled based on files changed
+5. Request review from maintainers
+6. Squash and merge after approval
+
+### Labels
+
+PRs are automatically labeled:
+
+| Label | Trigger |
+|-------|---------|
+| `python` | Changes to `*.py` files |
+| `agent` | Changes to agent.py, prompts.py, tools.json |
+| `api` | Changes to main.py, models.py |
+| `tests` | Changes to test files |
+| `documentation` | Changes to `*.md` files |
+| `ci` | Changes to `.github/` |
+| `size/xs` to `size/xl` | Based on lines changed |
 
 ---
 
