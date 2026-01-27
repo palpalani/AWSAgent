@@ -1,5 +1,13 @@
 # Agentic AWS
 
+[![CI](https://github.com/palpalani/AWSAgent/actions/workflows/ci.yml/badge.svg)](https://github.com/palpalani/AWSAgent/actions/workflows/ci.yml)
+[![Security](https://github.com/palpalani/AWSAgent/actions/workflows/security.yml/badge.svg)](https://github.com/palpalani/AWSAgent/actions/workflows/security.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
+
 AI-powered AWS infrastructure management through natural language conversations. Chat with an AI agent to create, list, read, and manage AWS resources using the AWS Cloud Control API.
 
 ## Key Features
@@ -359,7 +367,7 @@ uv run agentic-aws-chat  # Start Streamlit chat
 
 ## API Reference
 
-### Health Check
+### Root Endpoint
 
 ```http
 GET /
@@ -368,7 +376,43 @@ GET /
 **Response:**
 ```json
 {
-    "message": "FastAPI is running"
+    "message": "Agentic AWS API is running"
+}
+```
+
+### Health Check (Liveness)
+
+```http
+GET /health
+```
+
+**Response:**
+```json
+{
+    "status": "healthy"
+}
+```
+
+### Readiness Check
+
+```http
+GET /ready
+```
+
+**Response (Success):**
+```json
+{
+    "status": "ready",
+    "aws_connected": true
+}
+```
+
+**Response (Failure - 503):**
+```json
+{
+    "status": "not_ready",
+    "aws_connected": false,
+    "error": "AWS credentials not configured"
 }
 ```
 
