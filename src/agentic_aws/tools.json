@@ -1,0 +1,64 @@
+[
+    {
+        "name": "aws_cloud_control",
+        "description": "Execute AWS Cloud Control API operations for infrastructure management",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "operation": {
+                    "type": "string",
+                    "enum": ["create", "read", "update", "delete", "list"],
+                    "description": "The operation to perform"
+                },
+                "resource_type": {
+                    "type": "string",
+                    "description": "AWS resource type (e.g., AWS::S3::Bucket, AWS::EC2::Instance)"
+                },
+                "identifier": {
+                    "type": "string",
+                    "description": "Resource identifier for read/update/delete operations"
+                },
+                "properties": {
+                    "type": "object",
+                    "description": "Resource properties for create/update operations"
+                },
+                "region": {
+                    "type": "string",
+                    "default": "us-east-1",
+                    "description": "AWS region for the operation"
+                },
+                "max_results": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20,
+                    "description": "Maximum number of resources to return for list operations (1-100)"
+                },
+                "next_token": {
+                    "type": "string",
+                    "description": "Pagination token from a previous list operation to get the next page of results"
+                }
+            },
+            "required": ["operation", "resource_type"]
+        }
+    },
+    {
+        "name": "cloudwatch_logs",
+        "description": "Query CloudWatch Logs for Lambda function error logs",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "function_name": {
+                    "type": "string",
+                    "description": "Name of the Lambda function to check for errors"
+                },
+                "hours_back": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Number of hours to look back for errors"
+                }
+            },
+            "required": ["function_name"]
+        }
+    }
+]
