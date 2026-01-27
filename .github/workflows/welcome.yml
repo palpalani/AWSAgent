@@ -1,0 +1,39 @@
+name: Welcome
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  welcome:
+    name: Welcome First-Time Contributors
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            Welcome to Agentic AWS! Thanks for opening your first issue.
+
+            A maintainer will review this shortly. In the meantime, please ensure:
+            - You've searched existing issues to avoid duplicates
+            - You've provided enough details to understand and reproduce the issue
+            - You've included relevant logs or error messages if applicable
+
+            Need help? Check out our [documentation](README.md) or feel free to ask questions here.
+          pr-message: |
+            Welcome to Agentic AWS! Thanks for opening your first pull request.
+
+            A maintainer will review this shortly. Please ensure:
+            - Tests pass locally (`uv run pytest`)
+            - Code is formatted (`uv run ruff format`)
+            - Linting passes (`uv run ruff check`)
+            - Type checks pass (`uv run mypy src`)
+
+            Thanks for contributing to Agentic AWS!

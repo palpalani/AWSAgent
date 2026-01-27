@@ -1,0 +1,73 @@
+# Configuration for actions/labeler
+# Labels PRs based on changed files
+
+# Core application code
+python:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/**/*.py"
+          - "*.py"
+
+# Agent-specific changes
+agent:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/agentic_aws/agent.py"
+          - "src/agentic_aws/prompts.py"
+          - "src/agentic_aws/tools.json"
+
+# API changes
+api:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "main.py"
+          - "src/agentic_aws/models.py"
+
+# Frontend changes
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "chat.py"
+
+# Test changes
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/**/*"
+          - "conftest.py"
+
+# Documentation
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "*.md"
+          - "docs/**/*"
+
+# Configuration changes
+configuration:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "pyproject.toml"
+          - "uv.lock"
+          - ".env.example"
+
+# CI/CD changes
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**/*"
+
+# Dependencies
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "pyproject.toml"
+          - "uv.lock"
+
+# Security-related changes
+security:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/agentic_aws/config.py"
+          - "src/agentic_aws/exceptions.py"
+          - ".github/workflows/security.yml"

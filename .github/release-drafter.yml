@@ -1,0 +1,142 @@
+# Configuration for release-drafter/release-drafter
+# Automatically drafts release notes based on PR labels
+
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+
+categories:
+  - title: "Breaking Changes"
+    labels:
+      - "breaking"
+      - "major"
+    collapse-after: 5
+
+  - title: "New Features"
+    labels:
+      - "feature"
+      - "enhancement"
+    collapse-after: 10
+
+  - title: "Bug Fixes"
+    labels:
+      - "bug"
+      - "fix"
+      - "bugfix"
+    collapse-after: 10
+
+  - title: "Security"
+    labels:
+      - "security"
+
+  - title: "Documentation"
+    labels:
+      - "documentation"
+      - "docs"
+    collapse-after: 5
+
+  - title: "Dependencies"
+    labels:
+      - "dependencies"
+    collapse-after: 5
+
+  - title: "CI/CD"
+    labels:
+      - "ci"
+      - "github-actions"
+    collapse-after: 3
+
+  - title: "Other Changes"
+    labels:
+      - "*"
+    collapse-after: 5
+
+exclude-labels:
+  - "skip-changelog"
+  - "duplicate"
+  - "invalid"
+  - "wontfix"
+
+# Auto-labeler for PRs based on title/branch
+autolabeler:
+  - label: "breaking"
+    title:
+      - "/breaking/i"
+      - "/!:/i"
+
+  - label: "feature"
+    title:
+      - "/^feat/i"
+      - "/feature/i"
+    branch:
+      - "/^feature\/.*/i"
+      - "/^feat\/.*/i"
+
+  - label: "bug"
+    title:
+      - "/^fix/i"
+      - "/bug/i"
+    branch:
+      - "/^fix\/.*/i"
+      - "/^bugfix\/.*/i"
+      - "/^hotfix\/.*/i"
+
+  - label: "documentation"
+    title:
+      - "/^docs/i"
+      - "/documentation/i"
+    branch:
+      - "/^docs\/.*/i"
+
+  - label: "ci"
+    title:
+      - "/^ci/i"
+      - "/workflow/i"
+    files:
+      - ".github/**/*"
+
+  - label: "dependencies"
+    title:
+      - "/^chore\(deps\)/i"
+      - "/^deps/i"
+    branch:
+      - "/^dependabot\/.*/i"
+
+  - label: "security"
+    title:
+      - "/security/i"
+      - "/^sec/i"
+    branch:
+      - "/^security\/.*/i"
+
+# Version resolution
+version-resolver:
+  major:
+    labels:
+      - "major"
+      - "breaking"
+  minor:
+    labels:
+      - "feature"
+      - "enhancement"
+  patch:
+    labels:
+      - "bug"
+      - "fix"
+      - "bugfix"
+      - "documentation"
+      - "dependencies"
+      - "ci"
+      - "security"
+  default: patch
+
+# Release template
+template: |
+  ## What's Changed
+
+  $CHANGES
+
+  ## Contributors
+
+  $CONTRIBUTORS
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION

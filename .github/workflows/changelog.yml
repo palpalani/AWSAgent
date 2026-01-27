@@ -1,0 +1,35 @@
+name: Changelog
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  changelog:
+    name: Update Changelog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Generate Changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+          excludeTypes: "chore,style"
+          includeInvalidCommits: true
+          writeToFile: true
+          changelogFilePath: CHANGELOG.md
+
+      - name: Commit Changelog
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: update CHANGELOG.md for ${{ github.ref_name }}"
+          file_pattern: CHANGELOG.md
+          branch: main
