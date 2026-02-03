@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Remove stale label from issue
         if: github.event_name == 'issue_comment' && contains(github.event.issue.labels.*.name, 'stale')
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             await github.rest.issues.removeLabel({
@@ -33,7 +33,7 @@ jobs:
 
       - name: Remove stale label from PR
         if: github.event_name != 'issue_comment' && contains(github.event.pull_request.labels.*.name, 'stale')
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             await github.rest.issues.removeLabel({
